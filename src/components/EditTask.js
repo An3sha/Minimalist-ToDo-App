@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
@@ -17,9 +17,11 @@ const style = {
   pb: 3,
 };
 
-export default function ModalBox({ open, toggle, save }) {
+export default function EditTask({ open, toggle, updateTask, taskObj }) {
+
   const [taskName, setTaskName] = useState(" ");
-  const [description, setDescription] = useState(" ");
+    const [description, setDescription] = useState(" ");
+    
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name == "taskName") {
@@ -29,12 +31,17 @@ export default function ModalBox({ open, toggle, save }) {
     }
   };
 
-  const handleSave = (e) => {
+    useEffect(() => {
+        setTaskName(taskObj.Name)
+        setDescription(taskObj.Description)
+    },[])
+
+  const handleUpdate = (e) => {
     e.preventDefault();
-    let taskObj = {};
-    taskObj["Name"] = taskName;
-    taskObj["Description"] = description;
-    save(taskObj);
+    let tempObj = {};
+    tempObj["Name"] = taskName;
+    tempObj["Description"] = description;
+    updateTask(tempObj)
   };
 
   return (
@@ -60,7 +67,7 @@ export default function ModalBox({ open, toggle, save }) {
             },
           }}
         >
-          <h2 id="child-modal-title">Create Task</h2>
+          <h2 id="child-modal-title">Update Task</h2>
           <div id="child-modal-description">
             <form>
               <div className="form-group mt-2">
@@ -87,8 +94,8 @@ export default function ModalBox({ open, toggle, save }) {
           </div>
 
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button className="btn btn-primary mt-2" onClick={handleSave}>
-              Create
+            <button className="btn btn-primary mt-2" onClick={handleUpdate}>
+              Update
             </button>
             <span style={{ marginLeft: "10px" }}></span>
             <button className="btn btn-primary mt-2" onClick={toggle}>
